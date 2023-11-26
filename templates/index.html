@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>动物分类系统</title>
+    <!-- 样式表链接或内嵌 -->
+</head>
+<body>
+    <h1>动物分类系统</h1>
+
+    <!-- 图片上传表单 -->
+    <form id="upload-form" action="/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" id="file-input" accept="image/*">
+        <button type="button" onclick="uploadImage()">上传图片</button>
+    </form>
+
+    <!-- 显示图片 -->
+    <div id="image-container">
+        <img id="uploaded-image" alt="Uploaded Image">
+    </div>
+
+    <!-- 显示分类结果 -->
+    <div id="result-container">
+        <h2>分类结果：</h2>
+        <p id="classification-result">等待识别</p>
+    </div>
+
+    <!-- JavaScript 脚本 -->
+    <script>
+        // 处理上传图片和显示分类结果的 JavaScript 脚本
+
+        function uploadImage() {
+            // 获取文件输入框和上传表单
+            const fileInput = document.getElementById('file-input');
+            const uploadForm = document.getElementById('upload-form');
+
+            // 创建 FormData 对象，将文件添加到表单中
+            const formData = new FormData(uploadForm);
+            formData.append('file', fileInput.files[0]);
+
+            // 发送 Ajax 请求
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', '/upload', true);
+
+            // 处理上传完成的回调
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    // 处理上传成功的逻辑
+                    const result = JSON.parse(xhr.responseText);
+
+                    // 显示上传的图片
+                    const uploadedImage = document.getElementById('uploaded-image');
+                    uploadedImage.src = "https://img0.baidu.com/it/u=3565370990,3303282261&fm=253&fmt=auto&app=138&f=JPEG?w=667&h=500";
+
+                    // 显示分类结果
+                    const classificationResult = document.getElementById('classification-result');
+                    classificationResult.textContent = '分类结果：' + result.result;
+                } else {
+                    // 处理上传失败的逻辑
+                    console.error('上传失败');
+                }
+            };
+
+            // 发送请求
+            xhr.send(formData);
+        }
+    </script>
+</body>
+</html>
